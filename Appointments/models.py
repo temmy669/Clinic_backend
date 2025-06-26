@@ -3,6 +3,14 @@ import uuid
 from django.db import models
 
 # Create your models here.
+
+STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('confirmed', 'Confirmed'),
+    ('cancelled', 'Cancelled'),
+]
+
+
 class Appointment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     full_name = models.CharField(max_length=100)
@@ -11,6 +19,7 @@ class Appointment(models.Model):
     reason = models.TextField(blank=True, null=True)
     preferred_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     is_cancelled = models.BooleanField(default=False)
     reminder_sent = models.BooleanField(default=False)
 

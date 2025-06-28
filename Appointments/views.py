@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import Appointment
 from .serializers import AppointmentSerializer
-from .utility import *
+from .utils import *
 
 # Create your views here.
 class AppointmentCreateView(generics.CreateAPIView):

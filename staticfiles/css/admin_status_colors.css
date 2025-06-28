@@ -1,0 +1,7 @@
+td.field-status select {
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 4px;
+    background-color: #6c757d;
+}

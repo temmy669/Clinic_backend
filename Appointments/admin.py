@@ -31,6 +31,6 @@ class AppointmentAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            'all': ('css/admin_status_colors.css',),
+            'all': ('appointments/css/admin_status_colors.css',),
         }
-        js = ('js/admin_status_colors.js',)
+        js = ('appointments/js/admin_status_colors.js',)

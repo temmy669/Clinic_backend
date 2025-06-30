@@ -1,4 +1,59 @@
-.env/
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Environment
+env/
 venv/
+ENV/
+.venv/
 .env
+.env.*
+
+# Django specific
+*.sqlite3
+db.sqlite3
+media/
 staticfiles/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.pot
+*.py[cod]
+*.swp
+*.bak
+*.tmp
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.cache
+.pytest_cache/
+
+# Migrations (optional, use with caution)
+# **Uncomment below only if you want to ignore all migration files**
+# **Not recommended for teams**
+# */migrations/
+# */migrations/*.py
+# */migrations/*.pyc

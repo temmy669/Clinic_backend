@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'Appointments.apps.AppointmentsConfig',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,29 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Clinic API',
+    'DESCRIPTION': 'API documentation for managing appointments, patients, and doctors.',
+    'VERSION': '1.0.0',
+    'CONTACT': {
+        'name': 'Your Name',
+        'email': 'support@example.com',
+        'url': 'https://example.com',
+    },
+    'LICENSE': {
+        'name': 'MIT License',
+        'url': 'https://opensource.org/licenses/MIT',
+    },
+    'TERMS_OF_SERVICE': 'https://example.com/terms/',
+}
+
+
 
 
 # Internationalization

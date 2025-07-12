@@ -1,0 +1,64 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block branding %}
+<div class="admin-header">
+    <div class="logo-container">
+        <img src="{% static 'img/logo.png' %}" alt="Awesome Smile Dental Clinic Logo" class="brand_img">
+    </div>
+    <div class="title-container">Admin Area</div>
+</div>
+{% endblock %}
+
+{% block usertools %}
+{% if has_permission %}
+<div id="user-tools" class="admin-usertools">
+
+    {% block welcome-msg %}
+    <div class="welcome">
+        👋 Welcome, <strong>{% firstof user.get_short_name user.get_username %}</strong>
+    </div>
+    {% endblock %}
+
+    {% block userlinks %}
+    <div class="dropdown">
+        <button class="dropbtn">⚙️ Menu</button>
+        <div class="dropdown-content">
+            {% if site_url %}
+            <a href="{{ site_url }}">🌐 View site</a>
+            {% endif %}
+            {% if user.is_active and user.is_staff %}
+            {% url 'django-admindocs-docroot' as docsroot %}
+            {% if docsroot %}
+            <a href="{{ docsroot }}">📄 Docs</a>
+            {% endif %}
+            {% endif %}
+            {% if user.has_usable_password %}
+            <a href="{% url 'admin:password_change' %}">🔐 Change Password</a>
+            {% endif %}
+        </div>
+    </div>
+    <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">🚪 Log out</button>
+    </form>
+    {% endblock %}
+
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'admin:appointments_appointment_download-confirmed' %}" class="button"
+        style="padding: 10px 15px; background-color: #10284e; color: white; border-radius: 5px; text-decoration: none;">
+        📥 Download Today’s Confirmed Appointments
+    </a>
+</div>
+{{ block.super }}
+{% endblock %}

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m6xoy&$(5ws68gm-)!)3e$xs3v1%lp+7*0ub7cfsizw&h#r69s'
+SECRET_KEY = config('SECRET_KEY', default='your_default_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,9 +44,12 @@ INSTALLED_APPS = [
     'Appointments.apps.AppointmentsConfig',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'celery',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +64,7 @@ ROOT_URLCONF = 'clinic_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,13 +126,13 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation for managing appointments, patients, and doctors.',
     'VERSION': '1.0.0',
     'CONTACT': {
-        'name': 'Your Name',
-        'email': 'support@example.com',
-        'url': 'https://example.com',
+        'name': config('API_DOCUMENTATION_NAME','Your Name'),
+        'email': config('API_DOCUMENTATION_EMAIL', 'Your Email'),
+        'url': config('DEVELOPER_URL','https://example.com'),
     },
     'LICENSE': {
-        'name': 'MIT License',
-        'url': 'https://opensource.org/licenses/MIT',
+        'name': config('LICENSE_NAME', 'your_license_name'),
+        'url': config('LICENSE_URL', 'your_license_url'),
     },
     'TERMS_OF_SERVICE': 'https://example.com/terms/',
 }
@@ -152,7 +156,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'clinic_backend/static')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -162,8 +170,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='your_host_user')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='your_app_password')# Use an App Password, not your real password
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+#Celery beat settings
+CELERY_BEAT_SCHEDULE = {
+    'send_appointment_reminders': {
+        'task': 'Appointments.tasks.send_appointment_reminders',
+        'schedule': crontab(minute='*/15'),  # Every 15 minutes
+    },
+}

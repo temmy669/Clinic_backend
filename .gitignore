@@ -57,3 +57,12 @@ coverage.xml
 # */migrations/
 # */migrations/*.py
 # */migrations/*.pyc
+
+# Docker and Celery
+celerybeat-schedule
+celerybeat.pid
+*.pid
+*.db-shm
+*.db-wal
+*.db-journal
+
